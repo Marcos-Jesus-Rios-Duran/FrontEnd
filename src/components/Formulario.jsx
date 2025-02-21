@@ -77,10 +77,10 @@ const Formulario = ({ pacientes, setPacientes, paciente, setPaciente }) => {
 
     return (
         <div className="md:w-1/2 lg:w-2/5 mx-5">
-            <h2 className="font-black text-3xl text-center">Seguimiento Pacientes</h2>
+            <h2 className="font-black text-3xl text-center">Seguimiento de Estudiantes</h2>
 
             <p className="text-lg mt-5 text-center mb-10">
-                Añade Pacientes y {''}
+                Añade Estudiantes y {''}
                 <span className="text-indigo-600 font-bold ">Administralos</span>
             </p>
 
@@ -91,7 +91,7 @@ const Formulario = ({ pacientes, setPacientes, paciente, setPaciente }) => {
                 { error &&  <Error><p>Todos los campos son obligatorios</p></Error>}
                 <div className="mb-5">
                     <label htmlFor="mascota" className="block text-gray-700 uppercase font-bold">
-                        Nombre Mascota
+                        Nombre 
                     </label>
                     <input
                         id="mascota"
@@ -160,7 +160,7 @@ const Formulario = ({ pacientes, setPacientes, paciente, setPaciente }) => {
                 <input
                     type="submit"
                     className="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-colors"
-                    value={ paciente.id ? 'Editar Paciente' : 'Agregar Paciente' }
+                    value={ paciente.id ? 'Editar Paciente' : 'Agregar Estudiante' }
                 />
             </form>
         </div>
