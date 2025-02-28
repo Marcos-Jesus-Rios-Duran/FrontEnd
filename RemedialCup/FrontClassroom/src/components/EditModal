@@ -1,0 +1,143 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
+interface Classroom {
+  classroom_id: string;
+  building: string;
+  career: string;
+  type: string;
+  capacity: number;
+}
+
+interface ModalProps {
+  classroom: Classroom | null;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
+export const EditModal: React.FC<ModalProps> = ({ classroom, onClose, onSuccess }) => {
+  const [updatedClassroom, setUpdatedClassroom] = useState<Classroom | null>(classroom);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (updatedClassroom) {
+      setUpdatedClassroom({ ...updatedClassroom, [e.target.id]: e.target.value });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+
+    if (updatedClassroom) {
+      try {
+        const response = await axios.put(`http://10.10.62.3:3000/api/classrooms/updateOne/${updatedClassroom.classroom_id}`, updatedClassroom);
+
+        if (response.data.errors) {
+          setError(response.data.errors.join(', '));
+        } else {
+          onSuccess();
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          setError('Error updating classroom: ' + err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
+      }
+    }
+  };
+
+  return (
+    <>
+      {updatedClassroom && (
+        <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Editar Aula</h5>
+                <button type="button" className="close" onClick={onClose}>&times;</button>
+              </div>
+              <div className="modal-body">
+                {error && <div className="alert alert-danger">{error}</div>}
+                <form onSubmit={handleSubmit}>
+                  {/* Formulario similar al de registro, pero con datos pre-llenados */}
+                  <div className="row mb-3">
+                    <div className="col-lg-6">
+                      <label htmlFor="classroom_id" className="form-label">ID del Aula</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="classroom_id"
+                        value={updatedClassroom.classroom_id}
+                        onChange={handleChange}
+                        required
+                        minLength={1}
+                        maxLength={20}
+                        disabled // No permitimos cambiar el ID
+                      />
+                    </div>
+                    <div className="col-lg-6">
+                      <label htmlFor="building" className="form-label">Edificio</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="building"
+                        value={updatedClassroom.building}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="row mb-3">
+                    <div className="col-lg-6">
+                      <label htmlFor="career" className="form-label">Carrera</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="career"
+                        value={updatedClassroom.career}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                    <div className="col-lg-6">
+                      <label htmlFor="type" className="form-label">Tipo</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="type"
+                        value={updatedClassroom.type}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="row mb-3">
+                    <div className="col-lg-6">
+                      <label htmlFor="capacity" className="form-label">Capacidad</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="capacity"
+                        value={updatedClassroom.capacity}
+                        onChange={handleChange}
+                        required
+                        min={1}
+                      />
+                    </div>
+                  </div>
+                  <div className="row mb-3">
+                    <div className="col text-center">
+                      <button type="submit" className="btn btn-primary">Actualizar</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
