@@ -21,7 +21,7 @@ export const FormClassroom: React.FC = () => {
     setError(null); // Reseteamos el error en cada envío
 
     try {
-      const response = await axios.post('http://10.10.60.15:3000/api/classrooms/insert', classroom);
+      const response = await axios.post('http://10.10.62.3:3000/api/classrooms/insert', classroom);
 
       if (response.data.errors) {
         // Si hay errores, los mostramos

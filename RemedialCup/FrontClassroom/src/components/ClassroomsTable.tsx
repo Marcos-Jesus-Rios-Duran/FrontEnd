@@ -13,9 +13,18 @@ export const ClassroomsTable: React.FC = () => {
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
 
   const fetchClassrooms = () => {
-    axios.get('http://10.10.60.15:3000/api/classrooms/getAll')
+    axios.get('http://10.10.62.3:3000/api/classrooms/getAll')
       .then(response => setClassrooms(response.data.data)) // Accede a la propiedad 'data' de la respuesta
       .catch(error => console.error('Error fetching data:', error));
+  };
+
+  const deleteClassroom = (classroom_id: string) => {
+    axios.delete(`http://10.10.62.3:3000/api/classrooms/deleteOne/${classroom_id}`)
+      .then(response => {
+        console.log('Classroom deleted:', response.data);
+        fetchClassrooms(); // Actualizar la tabla después de eliminar
+      })
+      .catch(error => console.error('Error deleting classroom:', error));
   };
 
   useEffect(() => {
@@ -52,7 +61,12 @@ export const ClassroomsTable: React.FC = () => {
                 <td>{classroom.capacity}</td>
                 <td colSpan={2}>
                   <button className="btn btn-success btn-sm me-2">Editar</button>
-                  <button className="btn btn-danger btn-sm">Borrar</button>
+                  <button 
+                    className="btn btn-danger btn-sm" 
+                    onClick={() => deleteClassroom(classroom.classroom_id)}
+                  >
+                    Borrar
+                  </button>
                 </td>
               </tr>
             ))}
