@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { EditModal } from './EditModal';
 
 interface Classroom {
   classroom_id: string;
@@ -11,10 +12,11 @@ interface Classroom {
 
 export const ClassroomsTable: React.FC = () => {
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
+  const [selectedClassroom, setSelectedClassroom] = useState<Classroom | null>(null);
 
   const fetchClassrooms = () => {
     axios.get('http://10.10.62.3:3000/api/classrooms/getAll')
-      .then(response => setClassrooms(response.data.data)) // Accede a la propiedad 'data' de la respuesta
+      .then(response => setClassrooms(response.data.data)) 
       .catch(error => console.error('Error fetching data:', error));
   };
 
@@ -22,18 +24,29 @@ export const ClassroomsTable: React.FC = () => {
     axios.delete(`http://10.10.62.3:3000/api/classrooms/deleteOne/${classroom_id}`)
       .then(response => {
         console.log('Classroom deleted:', response.data);
-        fetchClassrooms(); // Actualizar la tabla después de eliminar
+        fetchClassrooms();
       })
       .catch(error => console.error('Error deleting classroom:', error));
   };
 
-  useEffect(() => {
-    fetchClassrooms(); // Obtener datos al montar el componente
+  const handleEdit = (classroom: Classroom) => {
+    setSelectedClassroom(classroom);
+  };
 
-    // Configurar polling para obtener datos cada 5 segundos
+  const handleCloseModal = () => {
+    setSelectedClassroom(null);
+  };
+
+  const handleSuccess = () => {
+    setSelectedClassroom(null);
+    fetchClassrooms();
+  };
+
+  useEffect(() => {
+    fetchClassrooms();
+
     const intervalId = setInterval(fetchClassrooms, 5000);
 
-    // Limpiar el intervalo cuando el componente se desmonte
     return () => clearInterval(intervalId);
   }, []);
 
@@ -60,7 +73,12 @@ export const ClassroomsTable: React.FC = () => {
                 <td>{classroom.type}</td>
                 <td>{classroom.capacity}</td>
                 <td colSpan={2}>
-                  <button className="btn btn-success btn-sm me-2">Editar</button>
+                  <button 
+                    className="btn btn-success btn-sm me-2"
+                    onClick={() => handleEdit(classroom)}
+                  >
+                    Editar
+                  </button>
                   <button 
                     className="btn btn-danger btn-sm" 
                     onClick={() => deleteClassroom(classroom.classroom_id)}
@@ -73,6 +91,13 @@ export const ClassroomsTable: React.FC = () => {
           </tbody>
         </table>
       </div>
+      {selectedClassroom && (
+        <EditModal 
+          classroom={selectedClassroom} 
+          onClose={handleCloseModal}
+          onSuccess={handleSuccess}
+        />
+      )}
     </>
   );
 };
