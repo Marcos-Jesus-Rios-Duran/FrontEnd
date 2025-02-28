@@ -28,7 +28,7 @@ export const FormClassroom: React.FC = () => {
         setError(response.data.errors.join(', '));
       } else {
         // Si la inserción fue exitosa, mostramos el mensaje y reseteamos el formulario
-        alert('Classroom saved: ' + JSON.stringify(response.data.data.classroom));
+        alert('Classroom saved: ');
         setClassroom({
           classroom_id: '',
           building: '',
@@ -40,7 +40,7 @@ export const FormClassroom: React.FC = () => {
     } catch (err) {
       // Verificamos si el error tiene la propiedad message
       if (err instanceof Error) {
-        setError('Error saving classroom: ' + err.message);
+        setError('Error saving classroom: ID already exist');
       } else {
         setError('An unknown error occurred');
       }
@@ -49,8 +49,8 @@ export const FormClassroom: React.FC = () => {
 
   return (
     <>
-      <div className="card">
-        <div className="card-header">
+      <div className="card custom-card">
+        <div className="card-header custom-card-header">
           <h3>Registro de Aulas</h3>
         </div>
         <div className="card-body">
@@ -62,7 +62,7 @@ export const FormClassroom: React.FC = () => {
                 <label htmlFor="classroom_id" className="form-label">ID del Aula</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control custom-input"
                   id="classroom_id"
                   value={classroom.classroom_id}
                   onChange={handleChange}
@@ -75,7 +75,7 @@ export const FormClassroom: React.FC = () => {
                 <label htmlFor="building" className="form-label">Edificio</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control custom-input"
                   id="building"
                   value={classroom.building}
                   onChange={handleChange}
@@ -88,7 +88,7 @@ export const FormClassroom: React.FC = () => {
                 <label htmlFor="career" className="form-label">Carrera</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control custom-input"
                   id="career"
                   value={classroom.career}
                   onChange={handleChange}
@@ -99,7 +99,7 @@ export const FormClassroom: React.FC = () => {
                 <label htmlFor="type" className="form-label">Tipo</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control custom-input"
                   id="type"
                   value={classroom.type}
                   onChange={handleChange}
@@ -112,7 +112,7 @@ export const FormClassroom: React.FC = () => {
                 <label htmlFor="capacity" className="form-label">Capacidad</label>
                 <input
                   type="number"
-                  className="form-control"
+                  className="form-control custom-input"
                   id="capacity"
                   value={classroom.capacity}
                   onChange={handleChange}
@@ -123,12 +123,76 @@ export const FormClassroom: React.FC = () => {
             </div>
             <div className="row mb-3">
               <div className="col text-center">
-                <button type="submit" className="btn btn-primary">Registrar</button>
+                <button type="submit" className="btn btn-primary custom-btn">Registrar</button>
               </div>
             </div>
           </form>
         </div>
       </div>
+      
+      <style jsx>{`
+        /* Estilo para el card (contorno y fondo) */
+        .custom-card {
+          background-color: #f8f9fa;
+          border: 2px solid #007bff;
+          border-radius: 10px;
+          padding: 20px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilo para el encabezado (card-header) */
+        .custom-card-header {
+          background-color:rgba(90, 230, 34, 0.89); /* Azul oscuro para el encabezado */
+          color: black; /* Color de texto blanco */
+          padding: 10px 20px; /* Espaciado adecuado */
+          border-radius: 10px 10px 0 0; /* Bordes redondeados en la parte superior */
+        }
+
+        /* Estilo para los inputs */
+        .custom-input {
+          border-radius: 5px;
+          border: 2px solid #007bff;
+          transition: all 0.3s ease;
+        }
+
+        /* Efecto cuando el input está enfocado */
+        .custom-input:focus {
+          border-color: #0056b3;
+          box-shadow: 0 0 5px rgba(0, 86, 179, 0.6);
+        }
+
+        /* Estilo para el botón */
+        .custom-btn {
+          background-color: #007bff;
+          border: 2px solid #007bff;
+          color: white;
+          font-weight: 600;
+          border-radius: 30px;
+          padding: 12px 30px;
+          font-size: 16px;
+          text-transform: uppercase;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .custom-btn:hover {
+          background-color: #0056b3;
+          border-color: #0056b3;
+          transform: translateY(-3px);
+          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .custom-btn:focus {
+          outline: none;
+        }
+
+        .custom-btn:active {
+          background-color: #004085;
+          border-color: #004085;
+          box-shadow: none;
+          transform: translateY(0);
+        }
+      `}</style>
     </>
   );
 };
