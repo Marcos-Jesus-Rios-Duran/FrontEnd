@@ -53,7 +53,7 @@ export const ClassroomsTable: React.FC = () => {
   return (
     <>
       <div className="table-responsive">
-        <table className="table table-bordered table-blue-background">
+        <table className="table custom-table">
           <thead>
             <tr>
               <th scope="col">ID del Aula</th>
@@ -66,17 +66,17 @@ export const ClassroomsTable: React.FC = () => {
           </thead>
           <tbody>
             {classrooms.map((classroom) => (
-              <tr key={classroom.classroom_id}>
+              <tr key={classroom.classroom_id} className="table-row">
                 <td>{classroom.classroom_id}</td>
                 <td>{classroom.building}</td>
                 <td>{classroom.career}</td>
                 <td>{classroom.type}</td>
                 <td>{classroom.capacity}</td>
                 <td colSpan={2}>
-                  <button className="btn btn-success btn-sm me-2" onClick={() => handleEdit(classroom)}>
+                  <button className="btn btn-success btn-sm me-2 custom-btn" onClick={() => handleEdit(classroom)}>
                     Editar
                   </button>
-                  <button className="btn btn-danger btn-sm" onClick={() => deleteClassroom(classroom.classroom_id)}>
+                  <button className="btn btn-danger btn-sm custom-btn" onClick={() => deleteClassroom(classroom.classroom_id)}>
                     Borrar
                   </button>
                 </td>
@@ -88,6 +88,68 @@ export const ClassroomsTable: React.FC = () => {
       {selectedClassroom && (
         <EditClassroomModal classroom={selectedClassroom} onClose={handleCloseModal} onSuccess={handleSuccess} />
       )}
+
+      <style jsx>{`
+        .custom-table {
+          width: 100%;
+          border-collapse: collapse;
+          background-color: #f8f9fa;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+          border-radius: 8px;
+          overflow: hidden;
+        }
+
+        .custom-table th, .custom-table td {
+          padding: 12px 15px;
+          text-align: center;
+        }
+
+        .custom-table th {
+          background-color: #007bff;
+          color: white;
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+
+        .table-row:hover {
+          background-color: #f1f1f1;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+        .custom-btn {
+          border-radius: 50px;
+          padding: 8px 16px;
+          font-size: 14px;
+          transition: all 0.3s ease;
+        }
+
+        .custom-btn:hover {
+          transform: scale(1.05);
+        }
+
+        .btn-success {
+          background-color: #28a745;
+          border: none;
+        }
+
+        .btn-danger {
+          background-color: #dc3545;
+          border: none;
+        }
+
+        .btn-success:hover {
+          background-color: #218838;
+        }
+
+        .btn-danger:hover {
+          background-color: #c82333;
+        }
+
+        .table-responsive {
+          margin-top: 20px;
+        }
+      `}</style>
     </>
   );
 };
