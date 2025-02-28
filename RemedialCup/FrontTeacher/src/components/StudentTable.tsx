@@ -1,68 +1,106 @@
-import React from 'react'; // Asegúrate de importar React
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { EditTeacherModal } from './EditTeacherModal';
 
-interface Student {
-  student_id: number;
+interface Teacher {
+  teacher_number: number;
   name: string;
   lastname: string;
-  grade: number;
-  group: string;
-  average: number;
+  age: number;
+  career: string;
+  salary: number;
 }
 
-const students: Student[] = [
-  {
-    student_id: 1,
-    name: "John",
-    lastname: "Doe",
-    grade: 1,
-    group: "A",
-    average: 90,
-  },
-  {
-    student_id: 2,
-    name: "Jane",
-    lastname: "Smith",
-    grade: 2,
-    group: "B",
-    average: 85,
-  },
-  // Agrega más datos de ejemplo según sea necesario
-];
+export const TeachersTable: React.FC = () => {
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
 
-export const StudentTable: React.FC = () => {
+  const fetchTeachers = () => {
+    axios.get('http://10.10.60.15:3000/api/teachers/getAll')
+      .then(response => setTeachers(response.data.data))
+      .catch(error => console.error('Error fetching data:', error));
+  };
+
+  const deleteTeacher = (teacher_number: number) => {
+    axios.delete(`http://10.10.60.15:3000/api/teachers/deleteOne/${teacher_number}`)
+      .then(response => {
+        console.log('Teacher deleted:', response.data);
+        fetchTeachers();
+      })
+      .catch(error => console.error('Error deleting teacher:', error));
+  };
+
+  const handleEdit = (teacher: Teacher) => {
+    setSelectedTeacher(teacher);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedTeacher(null);
+  };
+
+  const handleSuccess = () => {
+    setSelectedTeacher(null);
+    fetchTeachers();
+  };
+
+  useEffect(() => {
+    fetchTeachers();
+
+    const intervalId = setInterval(fetchTeachers, 5000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <>
       <div className="table-responsive">
         <table className="table table-bordered table-blue-background">
           <thead>
             <tr>
-              <th scope="col">Matrícula</th>
+              <th scope="col">Número de Profesor</th>
               <th scope="col">Nombre</th>
               <th scope="col">Apellido</th>
-              <th scope="col">Grado</th>
-              <th scope="col">Grupo</th>
-              <th scope="col">Promedio</th>
+              <th scope="col">Edad</th>
+              <th scope="col">Carrera</th>
+              <th scope="col">Salario</th>
               <th scope="col" colSpan={2}>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {students.map(student => (
-              <tr key={student.student_id}>
-                <td>{student.student_id}</td>
-                <td>{student.name}</td>
-                <td>{student.lastname}</td>
-                <td>{student.grade}</td>
-                <td>{student.group}</td>
-                <td>{student.average}</td>
+            {teachers.map(teacher => (
+              <tr key={teacher.teacher_number}>
+                <td>{teacher.teacher_number}</td>
+                <td>{teacher.name}</td>
+                <td>{teacher.lastname}</td>
+                <td>{teacher.age}</td>
+                <td>{teacher.career}</td>
+                <td>{teacher.salary}</td>
                 <td colSpan={2}>
-                  <button className="btn btn-success btn-sm me-2">Editar</button>
-                  <button className="btn btn-danger btn-sm">Borrar</button>
+                  <button 
+                    className="btn btn-success btn-sm me-2"
+                    onClick={() => handleEdit(teacher)}
+                  >
+                    Editar
+                  </button>
+                  <button 
+                    className="btn btn-danger btn-sm" 
+                    onClick={() => deleteTeacher(teacher.teacher_number)}
+                  >
+                    Borrar
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {selectedTeacher && (
+        <EditTeacherModal 
+          teacher={selectedTeacher} 
+          onClose={handleCloseModal}
+          onSuccess={handleSuccess}
+        />
+      )}
     </>
   );
 };
