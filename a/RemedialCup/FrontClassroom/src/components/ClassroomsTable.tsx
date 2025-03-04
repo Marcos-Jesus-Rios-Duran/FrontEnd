@@ -16,14 +16,14 @@ export const ClassroomsTable: React.FC = () => {
 
   const fetchClassrooms = () => {
     axios
-      .get('http://10.10.60.28:3000/api/classrooms/getAll')
+      .get('http://10.10.60.19:3000/api/classrooms/getAll')
       .then((response) => setClassrooms(response.data.data))
       .catch((error) => console.error('Error fetching data:', error));
   };
 
   const deleteClassroom = (classroom_id: string) => {
     axios
-      .delete(`http://10.10.60.28:3000/api/classrooms/deleteOne/${classroom_id}`)
+      .delete(`http://10.10.60.19:3000/api/classrooms/deleteOne/${classroom_id}`)
       .then((response) => {
         console.log('Classroom deleted:', response.data);
         fetchClassrooms();

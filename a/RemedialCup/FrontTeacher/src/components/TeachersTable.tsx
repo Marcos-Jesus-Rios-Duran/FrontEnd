@@ -18,7 +18,7 @@ export const TeachersTable: React.FC = () => {
 
   // Fetch teachers from the API
   const fetchTeachers = () => {
-    axios.get('http://10.10.60.28:3000/api/teachers/getAll')
+    axios.get('http://10.10.60.19:3000/api/teachers/getAll')
       .then(response => setTeachers(response.data.data)) // Access 'data' from response
       .catch(error => console.error('Error fetching data:', error));
   };
@@ -43,7 +43,7 @@ export const TeachersTable: React.FC = () => {
 
   // Delete a teacher
   const handleDeleteTeacher = (teacher_number: number) => {
-    axios.delete(`http://10.10.60.28:3000/api/teachers/deleteOne/${teacher_number}`)
+    axios.delete(`http://10.10.60.19:3000/api/teachers/deleteOne/${teacher_number}`)
       .then((response) => {
         console.log('Teacher deleted:', response.data);
         fetchTeachers(); // Refresh teacher list after deletion

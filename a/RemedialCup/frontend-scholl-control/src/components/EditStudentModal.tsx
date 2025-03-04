@@ -2,27 +2,28 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-interface Classroom {
-  classroom_id: string;
-  building: string;
-  career: string;
-  type: string;
-  capacity: number;
+interface Student {
+  student_id: string;
+  name: string;
+  lastname: string;
+  grade: string;
+  group: string;
+  average: number;
 }
 
 interface ModalProps {
-  classroom: Classroom | null;
+  student: Student | null;
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export const EditClassroomModal: React.FC<ModalProps> = ({ classroom, onClose, onSuccess }) => {
-  const [updatedClassroom, setUpdatedClassroom] = useState<Classroom | null>(classroom);
+export const EditStudentModal: React.FC<ModalProps> = ({ student, onClose, onSuccess }) => {
+  const [updatedStudent, setUpdatedStudent] = useState<Student | null>(student);
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (updatedClassroom) {
-      setUpdatedClassroom({ ...updatedClassroom, [e.target.id]: e.target.value });
+    if (updatedStudent) {
+      setUpdatedStudent({ ...updatedStudent, [e.target.id]: e.target.value });
     }
   };
 
@@ -30,11 +31,11 @@ export const EditClassroomModal: React.FC<ModalProps> = ({ classroom, onClose, o
     e.preventDefault();
     setError(null);
 
-    if (updatedClassroom) {
+    if (updatedStudent) {
       try {
         const response = await axios.put(
-          `http://10.10.60.19:3000/api/classrooms/updateOne/${updatedClassroom.classroom_id}`,
-          updatedClassroom
+          `http://10.10.60.19:3000/api/students/updateOne/${updatedStudent.student_id}`,
+          updatedStudent
         );
 
         if (response.data.errors) {
@@ -44,7 +45,7 @@ export const EditClassroomModal: React.FC<ModalProps> = ({ classroom, onClose, o
         }
       } catch (err) {
         if (err instanceof Error) {
-          setError('Error updating classroom: ' + err.message);
+          setError('Error updating student: ' + err.message);
         } else {
           setError('An unknown error occurred');
         }
@@ -54,72 +55,84 @@ export const EditClassroomModal: React.FC<ModalProps> = ({ classroom, onClose, o
 
   return (
     <>
-      {updatedClassroom && (
+      {updatedStudent && (
         <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
           <div className="modal-dialog modal-lg">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Editar Aula</h5>
+                <h5 className="modal-title">Editar Alumno</h5>
                 <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button>
               </div>
               <div className="modal-body">
                 {error && <div className="alert alert-danger">{error}</div>}
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
-                    <label htmlFor="classroom_id" className="form-label"><b>ID del Aula</b></label>
+                    <label htmlFor="student_id" className="form-label"><b>Matrícula</b></label>
                     <input
                       type="text"
                       className="form-control"
-                      id="classroom_id"
-                      value={updatedClassroom.classroom_id}
+                      id="student_id"
+                      value={updatedStudent.student_id}
                       onChange={handleChange}
                       required
                       disabled
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="building" className="form-label"><b>Edificio</b></label>
+                    <label htmlFor="name" className="form-label"><b>Nombre</b></label>
                     <input
                       type="text"
                       className="form-control"
-                      id="building"
-                      value={updatedClassroom.building}
+                      id="name"
+                      value={updatedStudent.name}
                       onChange={handleChange}
                       required
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="career" className="form-label"><b>Carrera</b></label>
+                    <label htmlFor="lastname" className="form-label"><b>Apellido</b></label>
                     <input
                       type="text"
                       className="form-control"
-                      id="career"
-                      value={updatedClassroom.career}
+                      id="lastname"
+                      value={updatedStudent.lastname}
                       onChange={handleChange}
                       required
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="type" className="form-label"><b>Tipo</b></label>
+                    <label htmlFor="grade" className="form-label"><b>Grado</b></label>
                     <input
                       type="text"
                       className="form-control"
-                      id="type"
-                      value={updatedClassroom.type}
+                      id="grade"
+                      value={updatedStudent.grade}
                       onChange={handleChange}
                       required
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="capacity" className="form-label"><b>Capacidad</b></label>
+                    <label htmlFor="group" className="form-label"><b>Grupo</b></label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="group"
+                      value={updatedStudent.group}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="average" className="form-label"><b>Promedio</b></label>
                     <input
                       type="number"
                       className="form-control"
-                      id="capacity"
-                      value={updatedClassroom.capacity}
+                      id="average"
+                      value={updatedStudent.average}
                       onChange={handleChange}
                       required
                       min={0}
+                      max={10}
                     />
                   </div>
                   <div className="text-center">

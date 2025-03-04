@@ -34,7 +34,7 @@ export const EditTeacherModal: React.FC<ModalProps> = ({ teacher, onClose, onSuc
     if (updatedTeacher) {
       try {
         const response = await axios.put(
-          `http://10.10.60.28:3000/api/teachers/updateOne/${updatedTeacher.teacher_number}`,
+          `http://10.10.60.19:3000/api/teachers/updateOne/${updatedTeacher.teacher_number}`,
           updatedTeacher
         );
 
